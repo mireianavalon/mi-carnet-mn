@@ -3,98 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MiUPV - Mireia</title>
+    <title>Mi UPV - Mireia</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --upv-red: #E43E33; --bg: #f8f9fa; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); display: flex; flex-direction: column; height: 100vh; }
+        :root { --upv-red: #E43E33; --bg: #f5f5f5; }
+        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Contenedor de pantallas */
-        .page { display: none; padding: 20px; padding-bottom: 90px; height: 100%; overflow-y: auto; }
-        .page.active { display: block; }
+        header { background: white; padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; flex-shrink: 0; }
+        header h1 { font-size: 18px; margin: 0; flex-grow: 1; text-align: center; }
 
-        /* Carnet Estilo Real */
-        .card-container { width: 100%; height: 220px; perspective: 1000px; cursor: pointer; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card-container.flipped .card-inner { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .front { background: var(--upv-red); color: white; padding: 20px; box-sizing: border-box; }
-        .back { background: #2c3e50; color: white; transform: rotateY(180deg); padding: 25px; box-sizing: border-box; }
+        /* Contenedores de Pestañas */
+        .tab-content { display: none; padding: 15px; flex-grow: 1; overflow-y: auto; }
+        .tab-content.active { display: block; }
+
+        /* CARNET UPV INTERACTIVO */
+        .flip-card { width: 100%; height: 215px; perspective: 1000px; margin-top: 10px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+        .flip-card.active .flip-card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
-        /* Barra de navegación */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; z-index: 1000; }
-        .nav-item { text-align: center; color: #888; cursor: pointer; font-size: 12px; }
+        /* Cara Delantera */
+        .card-front { background: var(--upv-red); color: white; padding: 20px; box-sizing: border-box; }
+        .profile-pic { width: 95px; height: 125px; background: #eee; border: 2px solid white; float: left; margin-right: 15px; object-fit: cover; }
+        .user-data h2 { margin: 0; font-size: 17px; line-height: 1.2; text-transform: uppercase; }
+        .card-logo { position: absolute; bottom: 10px; right: 20px; font-size: 80px; font-weight: 800; opacity: 0.15; }
+
+        /* Cara Trasera - Corregido color y visibilidad */
+        .card-back { background: #2c3e50; color: white; transform: rotateY(180deg); padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+        .back-info div { margin-bottom: 15px; border-left: 4px solid var(--upv-red); padding-left: 15px; }
+        .back-info label { display: block; font-size: 11px; color: #bdc3c7; text-transform: uppercase; font-weight: bold; }
+        .back-info span { font-size: 18px; font-weight: bold; color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+        /* SECCIONES COMPLEMENTARIAS */
+        .barcode-section { background: white; border-radius: 15px; padding: 20px; text-align: center; margin-top: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .calendar-grid { background: white; border-radius: 15px; padding: 15px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .today { background: var(--upv-red); color: white; border-radius: 50%; width: 30px; height: 30px; line-height: 30px; margin: 0 auto; }
+        .item-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+
+        /* NAV INFERIOR */
+        .nav-bar { background: white; display: flex; border-top: 1px solid #eee; padding: 10px 0; flex-shrink: 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 11px; color: #888; cursor: pointer; }
         .nav-item.active { color: var(--upv-red); }
-        .nav-item i { display: block; font-size: 22px; margin-bottom: 2px; }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
 
-        /* Estilos generales */
-        h2 { margin-top: 0; }
-        .section-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        /* FULLSCREEN BARCODE */
+        #fullview { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; }
+        #fullview svg { transform: rotate(90deg); width: 80vh; }
     </style>
 </head>
 <body>
 
-<div id="avisos" class="page">
-    <h2>Avisos</h2>
-    <div class="section-card"><strong>Calificaciones:</strong> Tu nota de Estructuras I ha sido publicada.</div>
-    <div class="section-card"><strong>Biblioteca:</strong> Tienes un libro pendiente de devolver.</div>
-</div>
-
-<div id="calendari" class="page">
-    <h2>Calendario - Abril</h2>
-    <div class="section-card" style="text-align:center;">
-        <h3>18 de Abril</h3>
-        <p>Examen final de Fundamentos de Informática.</p>
-    </div>
-</div>
-
-<div id="carnet" class="page active">
-    <div class="card-container" onclick="this.classList.toggle('flipped')">
-        <div class="card-inner">
-            <div class="front">
-                <div style="font-weight:bold; font-size:1.2em;">MIREIA NAVALÓN FERNÁNDEZ</div>
-                <div style="margin-top:10px;">Estudiante de Grado</div>
-            </div>
-            <div class="back">
-                <div style="color:#aaa;">Expediente:</div> <div>2022045678</div>
-                <div style="color:#aaa; margin-top:10px;">Caducidad:</div> <div>30/09/2028</div>
-            </div>
-        </div>
-    </div>
-    <div class="section-card" style="text-align:center; margin-top:20px;" onclick="document.getElementById('modal').style.display='flex'">
-        <i class="fa-solid fa-barcode" style="font-size:40px; color:var(--upv-red);"></i>
-        <p>Codi de barres</p>
-    </div>
-</div>
-
-<div id="servici" class="page">
-    <h2>Serveis UPV</h2>
-    <div class="section-card">🚗 Aparcamiento: Disponible en P1.</div>
-    <div class="section-card">📚 Biblioteca: 4 puestos disponibles.</div>
-    <div class="section-card">🍽️ Polisabores: Menú de hoy disponible.</div>
-</div>
-
-<div class="nav-bar">
-    <div class="nav-item" onclick="showPage('avisos')"><i class="fa-solid fa-bell"></i>Avisos</div>
-    <div class="nav-item" onclick="showPage('calendari')"><i class="fa-solid fa-calendar"></i>Calendari</div>
-    <div class="nav-item active" onclick="showPage('carnet')"><i class="fa-solid fa-id-card"></i>Carnet</div>
-    <div class="nav-item" onclick="showPage('servici')"><i class="fa-solid fa-grip-vertical"></i>Serveis</div>
-</div>
-
-<div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:2000; justify-content:center; align-items:center;" onclick="this.style.display='none'">
-    <svg id="barcode"></svg>
-</div>
-
-<script>
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-    JsBarcode("#barcode", "2022045678", { format: "CODE128" });
-</script>
-</body>
-</html>
-
+<header>
+    <h1>MiUPV</h1>
