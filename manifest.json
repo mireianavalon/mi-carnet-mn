@@ -1,0 +1,15 @@
+{
+  "short_name": "Mi UPV",
+  "name": "Carnet Universitario UPV",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#E43E33",
+  "background_color": "#ffffff"
+}
