@@ -20,34 +20,61 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* CARNET */
-        .card-container { width: 100%; height: 215px; perspective: 1000px; margin-bottom: 20px; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        /* CARNET - GIRO EJE FIJO */
+        .card-container { 
+            width: 100%; 
+            height: 215px; 
+            perspective: 1000px; 
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .card-inner { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform-style: preserve-3d; 
+        }
         .card-container.is-flipped .card-inner { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; padding: 20px; color: white; box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-        .card-front { background: var(--upv-red); position: relative; overflow: hidden; }
+        
+        .card-face { 
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden; 
+            border-radius: 15px; 
+            padding: 20px; 
+            color: white; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
+        }
+
+        .card-front { background: var(--upv-red); overflow: hidden; }
         .profile-photo { width: 95px; height: 125px; background: #fff; float: left; margin-right: 15px; border: 2px solid white; object-fit: cover; }
-        .upv-watermark { position: absolute; bottom: 5px; right: 15px; font-size: 85px; font-weight: 900; opacity: 0.15; }
-        .card-back { background: #2c3e50; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; }
+        .upv-watermark { position: absolute; bottom: 5px; right: 15px; font-size: 85px; font-weight: 900; opacity: 0.15; pointer-events: none; }
+
+        .card-back { 
+            background: #2c3e50; 
+            transform: rotateY(180deg); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
         .info-group { border-left: 4px solid var(--upv-red); padding-left: 15px; margin-bottom: 15px; }
         .info-label { display: block; font-size: 10px; color: #bdc3c7; text-transform: uppercase; font-weight: 700; }
-        .info-value { font-size: 18px; font-weight: 700; }
+        .info-value { font-size: 17px; font-weight: 700; color: white; }
 
         /* BOTÓN BARRAS */
         .barcode-btn { background: white; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eee; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
         .barcode-btn i { font-size: 48px; color: var(--upv-red); display: block; margin-bottom: 8px; }
         .barcode-btn span { color: var(--upv-red); font-weight: 700; font-size: 16px; }
 
-        /* CALENDARIO REAL ABRIL 2026 */
-        .cal-header { text-align: center; margin-bottom: 15px; font-weight: bold; font-size: 18px; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: white; padding: 15px; border-radius: 15px; text-align: center; gap: 10px; }
-        .cal-day-name { color: #999; font-size: 12px; font-weight: bold; }
-        .cal-date { font-size: 14px; padding: 5px; }
-        .cal-today { background: var(--upv-red); color: white; border-radius: 50%; width: 30px; height: 30px; line-height: 20px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
-
-        /* LISTAS */
+        /* LISTAS AVISOS / SERVICIOS */
         .list-item { background: white; padding: 16px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; border-left: 5px solid var(--upv-red); }
         .list-icon { width: 30px; text-align: center; font-size: 22px; color: #555; }
+        .list-text b { font-size: 15px; color: #333; }
+        .list-text small { color: #666; font-size: 13px; display: block; margin-top: 2px; }
 
         /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #efefef; padding: 8px 0 12px; }
@@ -69,15 +96,24 @@
             <div class="card-inner">
                 <div class="card-face card-front">
                     <img src="foto.jpg" class="profile-photo" onerror="this.src='https://via.placeholder.com/95x125?text=MIREIA'">
-                    <div style="font-weight:700; font-size:17px; text-transform:uppercase;">NAVALÓN FERNÁNDEZ,<br>MIREIA</div>
+                    <div style="font-weight:700; font-size:17px; text-transform:uppercase; line-height: 1.2;">NAVALÓN FERNÁNDEZ,<br>MIREIA</div>
                     <div style="margin-top:15px; font-weight:700; font-size:14px;">ESTUDIANTE</div>
                     <div style="font-size:12px; opacity:0.95; margin-top:4px;">Grado en Ingenieria de telecomunicaciones</div>
                     <div class="upv-watermark">UPV</div>
                 </div>
                 <div class="card-face card-back">
-                    <div class="info-group"><span class="info-label">Expediente</span><span class="info-value">2022045678</span></div>
-                    <div class="info-group"><span class="info-label">Nacimiento</span><span class="info-value">18/08/2001</span></div>
-                    <div class="info-group"><span class="info-label">Caducidad</span><span class="info-value">30/09/2028</span></div>
+                    <div class="info-group">
+                        <span class="info-label">Nº EXPEDIENTE ALUMNO</span>
+                        <span class="info-value">2022045678</span>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">FECHA DE NACIMIENTO</span>
+                        <span class="info-value">18/08/2001</span>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">FECHA DE CADUCIDAD</span>
+                        <span class="info-value">30/09/2028</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,31 +121,37 @@
     </div>
 
     <div id="tab-avisos" class="tab-content">
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: #444;">Avisos</h2>
         <div class="list-item" style="border-left-color: #f1c40f;">
             <div class="list-icon"><i class="fa-solid fa-bullhorn"></i></div>
-            <div><b>Actas publicadas</b><br><small>Disponible acta definitiva de Acústica.</small></div>
+            <div class="list-text"><b>Actas publicadas</b><small>Disponible acta definitiva de Acústica.</small></div>
+        </div>
+        <div class="list-item">
+            <div class="list-icon"><i class="fa-solid fa-book"></i></div>
+            <div class="list-text"><b>Préstamo disponible</b><small>Ya puedes recoger el libro solicitado en la biblioteca del Campus de Vera.</small></div>
         </div>
     </div>
 
     <div id="tab-cal" class="tab-content">
-        <div class="cal-header">Abril 2026</div>
-        <div class="cal-grid">
-            <div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">X</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div><div class="cal-day-name">D</div>
-            <div></div><div></div><div class="cal-date">1</div><div class="cal-date">2</div><div class="cal-date">3</div><div class="cal-date">4</div><div class="cal-date">5</div>
-            <div class="cal-date">6</div><div class="cal-date">7</div><div class="cal-date">8</div><div class="cal-date">9</div><div class="cal-date">10</div><div class="cal-date">11</div><div class="cal-date">12</div>
-            <div class="cal-date">13</div><div class="cal-date">14</div><div class="cal-date">15</div><div class="cal-date">16</div><div class="cal-date">17</div><div class="cal-date"><div class="cal-today">18</div></div><div class="cal-date">19</div>
-            <div class="cal-date">20</div><div class="cal-date">21</div><div class="cal-date">22</div><div class="cal-date">23</div><div class="cal-date">24</div><div class="cal-date">25</div><div class="cal-date">26</div>
+        <h3 style="text-align:center">Abril 2026</h3>
+        <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; color: #888;">
+            <p>Hoy es sábado 18 de abril.</p>
+            <p>No hay eventos registrados.</p>
         </div>
     </div>
 
     <div id="tab-serv" class="tab-content">
-        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-car"></i></div><div><b>Aparcament</b></div></div>
-        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-book"></i></div><div><b>Biblioteca</b></div></div>
-        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-utensils"></i></div><div><b>Beca comedor</b></div></div>
+        <h2 style="font-size: 18px; margin-bottom: 15px; color: #444;">Serveis</h2>
+        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-car"></i></div><div class="list-text"><b>Aparcament</b></div></div>
+        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-book"></i></div><div class="list-text"><b>Biblioteca</b></div></div>
+        <div class="list-item"><div class="list-icon"><i class="fa-solid fa-utensils"></i></div><div class="list-text"><b>Beca comedor</b></div></div>
     </div>
 </div>
 
-<div id="modal" onclick="this.style.display='none'"><svg id="bsvg"></svg><p style="margin-top:50px; font-weight:700; font-size:20px;">2022045678</p></div>
+<div id="modal" onclick="this.style.display='none'">
+    <svg id="bsvg"></svg>
+    <p style="margin-top:50px; font-weight:700; font-size:20px;">2022045678</p>
+</div>
 
 <nav>
     <div class="nav-item" onclick="show('tab-avisos', this)"><i class="fa-regular fa-bell"></i>Avisos</div>
@@ -132,3 +174,4 @@
 </script>
 </body>
 </html>
+
